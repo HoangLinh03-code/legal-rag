@@ -1,0 +1,75 @@
+[project]
+name = "legal-rag"
+version = "0.1.0"
+description = "Hệ thống hỏi đáp pháp luật Việt Nam bằng AI — dữ liệu crawl từ web"
+readme = "README.md"
+requires-python = ">=3.12"
+
+dependencies = [
+    "torch>=2.0",
+    "httpx[http2]>=0.27",
+    "beautifulsoup4>=4.12",
+    "lxml>=5.0",
+    "playwright>=1.45",
+    "apscheduler>=3.10",
+    "sqlalchemy>=2.0",
+    "asyncpg>=0.29",
+    "alembic>=1.13",
+    "structlog>=24.1",
+    "tqdm>=4.66",
+    "rich>=13.7",
+    "fastapi>=0.111",
+    "uvicorn[standard]>=0.30",
+    "pydantic-settings>=2.3",
+    "sentence-transformers>=3.0",
+    "qdrant-client>=1.9",
+    "rank-bm25>=0.2",
+    "underthesea>=6.8",
+    "anthropic>=0.28",
+    "python-multipart>=0.0.9",
+    "slowapi>=0.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2",
+    "pytest-asyncio>=0.23",
+    "ruff>=0.4",
+    "mypy>=1.10",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+markers = [
+    "integration: tests that make real HTTP requests (deselect with '-m not integration')",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "pytest-asyncio>=1.3.0",
+]
+
+# === PyTorch CUDA 12.8 cho NVIDIA GPU ===
+# Bắt buộc phải có: nếu không, uv sẽ tải bản CPU-only từ PyPI
+# RTX 3050 Laptop (CUDA 13.1) tương thích với cu128
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
